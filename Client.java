@@ -83,9 +83,7 @@ public class Client {
         userInput.close();
     }
 
-    private static void CreateRequest(String serverIP, int serverPort, int dataRequest) {
-        String serverResponse = "No response from server.";
-        
+    private static void CreateRequest(String serverIP, int serverPort, int dataRequest) {        
         try {
             //Create client socket
             Socket clientSocket = new Socket(serverIP, serverPort);
@@ -96,7 +94,7 @@ public class Client {
 
             //Get response from server
             BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            serverResponse = "";
+            String serverResponse = "";
             String line = "";
             while ((line = reader.readLine()) != null) {
                 serverResponse += line + "\n";

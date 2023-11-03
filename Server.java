@@ -69,7 +69,7 @@ public class Server {
                     case 2:
                         //Memory request
                         System.out.println("Memory usage request received from: " + requestClientInfo);
-                        process = Runtime.getRuntime().exec(args = new String[]{"free", "-g"});
+                        process = Runtime.getRuntime().exec(args = new String[]{"free", "-m"});
                         processOut = new BufferedReader(new InputStreamReader(process.getInputStream()));
                         requestResponse = "Memory Usage: \n";
                         currentStreamline = "";
@@ -113,10 +113,11 @@ public class Server {
                             requestResponse += currentStreamline + "\n";
                         }
                         processOut.close();
+                        break;
                     default:
                         //Invalid request
                         System.out.println("Invalid request received from: " + requestClientInfo);
-                        requestResponse = "Invalid request received.";
+                        requestResponse = "Invalid request sent.";
                         break;
                 }
 
@@ -137,6 +138,8 @@ public class Server {
             e.printStackTrace();
         }
 
+        //Shutdown server
+        System.out.println("Shutting down server...");
         userInput.close();
     }
 }
