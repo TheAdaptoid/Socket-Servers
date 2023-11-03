@@ -7,6 +7,9 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Multi-Threaded Client
+ */
 public class Client {
     
     public static void main(String[] args) throws InterruptedException {
@@ -83,6 +86,13 @@ public class Client {
         userInput.close();
     }
 
+    /**
+     * Creates a request to the server with the given server IP, server port, and data request.
+     *
+     * @param  serverIP    the IP address of the server
+     * @param  serverPort  the port number of the server
+     * @param  dataRequest the data request to send to the server
+     */
     private static void CreateRequest(String serverIP, int serverPort, int dataRequest) {        
         try {
             //Create client socket

@@ -7,7 +7,7 @@ import java.net.Socket;
 import java.util.Scanner;
 
 /**
- * Interative_Server
+ * Iterative Server
  */
 public class Server {
 
