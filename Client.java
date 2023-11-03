@@ -76,6 +76,8 @@ public class Client {
                 totalThreadTime += time;
             }
             float averageThreadTime = totalThreadTime / requestCount;
+
+            //Display thread times
             System.out.println("Average thread time: " + averageThreadTime + " ms");
             System.out.println("Total thread time: " + totalThreadTime + " ms");
 
