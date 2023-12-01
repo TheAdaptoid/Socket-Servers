@@ -54,28 +54,22 @@ public class Client {
 
             //Generate threaded requests
             ArrayList<Thread> threadsArray = new ArrayList<>();
-            ArrayList<Long> requestTimes = new ArrayList<>();
+            long threadStrartTime = System.currentTimeMillis();
             for (int i = 0; i < requestCount; i++) {
                 final int localUserCommand = userCommand;
                 Thread thread = new Thread(() -> CreateRequest(serverIP, serverPort, localUserCommand));
                 threadsArray.add(thread);
                 thread.start();
-                requestTimes.add(System.currentTimeMillis());
             }
 
             //Collect all threads
             for (Thread thread : threadsArray) {
                 thread.join();
-                long calculatedTime = System.currentTimeMillis() - requestTimes.get(threadsArray.indexOf(thread));
-                requestTimes.set(threadsArray.indexOf(thread), calculatedTime);
             }
 
             //Calculate thread times
-            long totalThreadTime = 0;
-            for (long time : requestTimes) {
-                totalThreadTime += time;
-            }
-            float averageThreadTime = totalThreadTime / requestCount;
+            long totalThreadTime = System.currentTimeMillis() - threadStrartTime;
+            double averageThreadTime = (double)totalThreadTime / (float)requestCount;
 
             //Display thread times
             System.out.println("Average thread time: " + averageThreadTime + " ms");

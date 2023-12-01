@@ -11,14 +11,25 @@ import java.util.Scanner;
  */
 public class TServer {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         //Setup and prep
         System.out.println("Booting Server...");
         Scanner userInput = new Scanner(System.in);
+        Boolean freeThreads = true;
 
         //Get port to observe
         System.out.println("Enter port to observe. Range 1025-4998: ");
         int observedPort = userInput.nextInt();
+
+        //Get Thread limit
+        System.out.println("Enter thread limit. Range 2 to 2^32: ");
+        long threadLimit = userInput.nextInt();
+        if (threadLimit > (long)(Math.pow(2.0, 32.0))) {
+            threadLimit = (long)(Math.pow(2.0, 32.0));
+        } else if (threadLimit < 2) {
+            threadLimit = 2;
+        }
+        double threadWaitTime = ((1.0)/threadLimit) * 1000;
 
         try {
             //Create socket server
@@ -27,20 +38,32 @@ public class TServer {
             System.out.println("Socket created.");
 
             while (true) {
-                //Take in input from observed port
-                System.out.println("Waiting for client requests...");
-                Socket currentRequest = serverSocket.accept();
 
-                //Create new Handling Thread
-                Thread handlingThread = new Thread(() -> {
-                    try {
-                        HandleRequest(currentRequest);
-                    } catch (IOException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
+                //Check if thread limit has been reached
+                if (Thread.activeCount() >= threadLimit) {
+                    if (freeThreads == true) {
+                        System.out.println("|| Thread limit reached. Waiting " + threadWaitTime + "ms for threads to finish. ||");
+                        freeThreads = false;
                     }
-                });
-                handlingThread.start();                
+                    
+                    //Wait for a thread to finish
+                    Thread.sleep(((long)threadWaitTime));
+                } else {
+                    //Take in input from observed port
+                    freeThreads = true;
+                    System.out.println("[AT: " + Thread.activeCount() + "/" + threadLimit + "] Waiting for client requests...");
+                    Socket currentRequest = serverSocket.accept();
+
+                    //Create new Handling Thread
+                    Thread handlingThread = new Thread(() -> {
+                        try {
+                            HandleRequest(currentRequest);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    });
+                    handlingThread.start();  
+                }          
             }
 
         } catch (IOException e) {
